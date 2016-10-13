@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+K8S_VERSION=v1.4.1
+ARCH=amd64
+docker run \
+  --rm -ti \
+  --volume=/:/rootfs:ro \
+  --volume=/sys:/sys:rw \
+  --volume=/var/lib/docker/:/var/lib/docker:rw \
+  --volume=/var/lib/kubelet/:`pwd`/var/lib/kubelet:rw \
+  --volume=/var/run:`pwd`/var/run:rw \
+  --volume=/var/run/docker.sock:/var/run/docker.sock:rw \
+  --volume=/var/run/docker:/var/run/docker:rw \
+  -e KUBE_HOME=`pwd`/.kube \
+  --net=host \
+  --pid=host \
+  --privileged \
+  gcr.io/google_containers/hyperkube-${ARCH}:${K8S_VERSION} \
+  /hyperkube kubectl $@
